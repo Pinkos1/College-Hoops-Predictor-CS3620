@@ -15,3 +15,16 @@ TEAMS = [
     "Alabama", "Akron", "Gonzaga", "Duke",
     "Kansas", "Kentucky", "Purdue", "UConn"
 ]
+
+
+class PredictionApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        # Window size
+        self.title("College Basketball Matchup Predictor")
+        self.geometry("450x450")
+        self.resizable(True, True)
+
+        # Build GUI 
+        self.create_widgets()
