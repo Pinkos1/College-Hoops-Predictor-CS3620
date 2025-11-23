@@ -71,7 +71,7 @@ class TeamSelector(ttk.Frame):
 
     def on_search(self, event=None):
     
-    
+
         query = self.search_var.get().strip().lower()
         if not query:
             self.filtered_teams = self.all_teams.copy()
@@ -79,7 +79,8 @@ class TeamSelector(ttk.Frame):
             self.filtered_teams = [t for t in self.all_teams if query in t.lower()]
         self.update_listbox()
 
-    def on_select(self, event=None):
+    def on_select(self, event = None):
+
         """Handle selection from the listbox."""
         selection = self.listbox.curselection()
         if not selection:
@@ -97,15 +98,6 @@ class PredictionApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        # Load team list using external logic
-        try:
-            self.teams = load_team_list()
-        except Exception as e:
-            messagebox.showerror(
-                "Error Loading Teams",
-                f"Could not load team list.\n\n{e}\n\nUsing fallback teams."
-            )
-            self.teams = ["Alabama", "Akron", "Duke", "Gonzaga", "Kansas"]
 
         # Window setup
         self.title("College Basketball Matchup Predictor")
@@ -126,22 +118,22 @@ class PredictionApp(tk.Tk):
             self,
             text="College Basketball Matchup Predictor",
             font=("Times New Roman", 16, "bold")
-        ).pack(pady=15)
+        ).pack(pady = 15)
 
         # Info about team count
         ttk.Label(
             self,
-            text=f"Teams loaded: {len(self.teams)}",
-            font=("Arial", 9)
-        ).pack(pady=(0, 10))
+            text = f"Teams loaded: {len(self.teams)}",
+            font = ("Arial", 9)
+        ).pack(pady = (0, 10))
 
         # Main frame for selectors
         main_frame = ttk.Frame(self)
-        main_frame.pack(fill="both", expand=True, padx=10, pady=5)
+        main_frame.pack(fill = "both", expand = True, padx = 10, pady = 5)
 
         # Two side-by-side selectors
-        self.selector_a = TeamSelector(main_frame, self.teams, title="Team A")
-        self.selector_a.pack(side="left", fill="both", expand=True, padx=(0, 5))
+        self.selector_a = TeamSelector(main_frame, self.teams, title = "Team A")
+        self.selector_a.pack(side = "left", fill = "both", expand = True, padx = (0, 5))
 
         self.selector_b = TeamSelector(main_frame, self.teams, title="Team B (Opponent)")
         self.selector_b.pack(side="left", fill="both", expand=True, padx=(5, 0))
