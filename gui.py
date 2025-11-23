@@ -15,7 +15,7 @@ from team_logic import load_team_list
 
 class TeamSelector(ttk.Frame):
 
-    def __init__(self, master, teams, title="Team", *args, **kwargs):
+    def __init__(self, master, teams, title = "Team", *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
         self.all_teams = sorted(teams)
@@ -23,12 +23,12 @@ class TeamSelector(ttk.Frame):
         self.selected_team = None
 
         # Title label
-        self.title_label = ttk.Label(self, text=title, font=("Times New Roman", 11, "bold"))
-        self.title_label.pack(anchor="w", pady=(0, 2))
+        self.title_label = ttk.Label(self, text = title, font = ("Times New Roman", 11, "bold"))
+        self.title_label.pack(anchor = "w", pady = (0, 2))
 
         # Search label + entry
         search_frame = ttk.Frame(self)
-        search_frame.pack(fill="x", pady=(0, 4))
+        search_frame.pack(fill = "x", pady = (0, 4))
 
         ttk.Label(search_frame, text="Search:").pack(side="left")
         self.search_var = tk.StringVar()
@@ -40,14 +40,14 @@ class TeamSelector(ttk.Frame):
 
         # Listbox with scrollbar
         list_frame = ttk.Frame(self)
-        list_frame.pack(fill="both", expand=True)
+        list_frame.pack(fill = "both", expand = True)
 
-        self.listbox = tk.Listbox(list_frame, height=12, exportselection=False)
-        self.listbox.pack(side="left", fill="both", expand=True)
+        self.listbox = tk.Listbox(list_frame, height = 12, exportselection = False)
+        self.listbox.pack(side = "left", fill = "both", expand = True)
 
-        scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.listbox.yview)
-        scrollbar.pack(side="right", fill="y")
-        self.listbox.config(yscrollcommand=scrollbar.set)
+        scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command = self.listbox.yview)
+        scrollbar.pack(side = "right", fill = "y")
+        self.listbox.config(yscrollcommand = scrollbar.set)
 
         # Populate the listbox
         self.update_listbox()
