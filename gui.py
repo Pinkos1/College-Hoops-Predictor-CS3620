@@ -136,23 +136,29 @@ class PredictionApp(tk.Tk):
         self.selector_a.pack(side = "left", fill = "both", expand = True, padx = (0, 5))
 
         self.selector_b = TeamSelector(main_frame, self.teams, title="Team B (Opponent)")
-        self.selector_b.pack(side="left", fill="both", expand=True, padx=(5, 0))
+        self.selector_b.pack(side = "left", fill = "both", expand = True, padx = (5, 0))
 
         # Predict button
         ttk.Button(
             self,
-            text="Predict Game",
-            command=self.on_predict_click
-        ).pack(pady=10)
+            text = "Predict Game",
+            command = self.on_predict_click
+        ).pack(pady = 10)
 
         # Output label
         self.result_label = ttk.Label(
             self,
-            text="Choose two teams to begin.",
-            font=("Arial", 10),
-            justify="center"
+            text = "Choose two teams to begin.",
+            font = ("Arial", 10),
+            justify = "center"
         )
         self.result_label.pack(pady=5)
+
+
+
+
+
+
 
 
 
@@ -169,6 +175,7 @@ class PredictionApp(tk.Tk):
         if team_a == team_b:
             messagebox.showwarning("Invalid Matchup", "Pick two different schools.")
             return
+
 
         # Simple placeholder prediction for now
         predicted_winner = team_a
