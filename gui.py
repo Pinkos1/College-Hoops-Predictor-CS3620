@@ -60,9 +60,9 @@ class TeamSelector(ttk.Frame):
         self.listbox.bind("<Return>", self.on_select)
 
         # Selected label
-        self.selected_var = tk.StringVar(value="Selected: (none)")
-        self.selected_label = ttk.Label(self, textvariable=self.selected_var, font=("Arial", 9, "italic"))
-        self.selected_label.pack(anchor="w", pady=(4, 0))
+        self.selected_var = tk.StringVar(value = "Selected: (none)")
+        self.selected_label = ttk.Label(self, textvariable = self.selected_var, font = ("Arial", 9, "italic"))
+        self.selected_label.pack(anchor = "w", pady = (4, 0))
 
     def update_listbox(self):
         self.listbox.delete(0, tk.END)
@@ -70,7 +70,8 @@ class TeamSelector(ttk.Frame):
             self.listbox.insert(tk.END, team)
 
     def on_search(self, event=None):
-        """Filter the list of teams based on what's typed."""
+    
+    
         query = self.search_var.get().strip().lower()
         if not query:
             self.filtered_teams = self.all_teams.copy()
