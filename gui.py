@@ -1,114 +1,183 @@
 
+
 """
 @Author - Adam Pinkos
 @File - gui.py
 @Date - 11/18/2025
-@Brief - Simple gui that you can select two colleges and receive a predicted score outcome. Even if the college never play each other
-
+@Brief - Simple GUI that lets you pick teams and get a prediction score
 """
 
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-# Picked random colleges as placeholers before I insert data into the program 
-TEAMS = [
-    "Alabama", "Akron", "Gonzaga", "Duke",
-    "Kansas", "Kentucky", "Purdue", "UConn"
-]
+from team_logic import load_team_list  
+
+
+class TeamSelector(ttk.Frame):
+
+    def __init__(self, master, teams, title="Team", *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+
+        self.all_teams = sorted(teams)
+        self.filtered_teams = self.all_teams.copy()
+        self.selected_team = None
+
+        # Title label
+        self.title_label = ttk.Label(self, text=title, font=("Times New Roman", 11, "bold"))
+        self.title_label.pack(anchor="w", pady=(0, 2))
+
+        # Search label + entry
+        search_frame = ttk.Frame(self)
+        search_frame.pack(fill="x", pady=(0, 4))
+
+        ttk.Label(search_frame, text="Search:").pack(side="left")
+        self.search_var = tk.StringVar()
+        self.search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=20)
+        self.search_entry.pack(side="left", padx=(4, 0), fill="x", expand=True)
+
+        # Bind typing to update the list (no extra click needed)
+        self.search_entry.bind("<KeyRelease>", self.on_search)
+
+        # Listbox with scrollbar
+        list_frame = ttk.Frame(self)
+        list_frame.pack(fill="both", expand=True)
+
+        self.listbox = tk.Listbox(list_frame, height=12, exportselection=False)
+        self.listbox.pack(side="left", fill="both", expand=True)
+
+        scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.listbox.yview)
+        scrollbar.pack(side="right", fill="y")
+        self.listbox.config(yscrollcommand=scrollbar.set)
+
+        # Populate the listbox
+        self.update_listbox()
+
+        # When user clicks an item, update selected team
+        self.listbox.bind("<<ListboxSelect>>", self.on_select)
+
+        # Also allow double-click / Enter to quickly choose
+        self.listbox.bind("<Double-Button-1>", self.on_select)
+        self.listbox.bind("<Return>", self.on_select)
+
+        # Selected label
+        self.selected_var = tk.StringVar(value="Selected: (none)")
+        self.selected_label = ttk.Label(self, textvariable=self.selected_var, font=("Arial", 9, "italic"))
+        self.selected_label.pack(anchor="w", pady=(4, 0))
+
+    def update_listbox(self):
+        self.listbox.delete(0, tk.END)
+        for team in self.filtered_teams:
+            self.listbox.insert(tk.END, team)
+
+    def on_search(self, event=None):
+        """Filter the list of teams based on what's typed."""
+        query = self.search_var.get().strip().lower()
+        if not query:
+            self.filtered_teams = self.all_teams.copy()
+        else:
+            self.filtered_teams = [t for t in self.all_teams if query in t.lower()]
+        self.update_listbox()
+
+    def on_select(self, event=None):
+        """Handle selection from the listbox."""
+        selection = self.listbox.curselection()
+        if not selection:
+            return
+        index = selection[0]
+        if 0 <= index < len(self.filtered_teams):
+            self.selected_team = self.filtered_teams[index]
+            self.selected_var.set(f"Selected: {self.selected_team}")
+
+    def get_selected_team(self):
+        return self.selected_team
 
 
 class PredictionApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        # Window size
+        # Load team list using external logic
+        try:
+            self.teams = load_team_list()
+        except Exception as e:
+            messagebox.showerror(
+                "Error Loading Teams",
+                f"Could not load team list.\n\n{e}\n\nUsing fallback teams."
+            )
+            self.teams = ["Alabama", "Akron", "Duke", "Gonzaga", "Kansas"]
+
+        # Window setup
         self.title("College Basketball Matchup Predictor")
-        self.geometry("450x450")
+        self.geometry("700x450")
         self.resizable(True, True)
 
-        # Build GUI 
+        # Build GUI
         self.create_widgets()
 
-
+  
 
 
 
 
     def create_widgets(self):
-
         # Title
-        title_label = ttk.Label(
+        ttk.Label(
             self,
-            text = "College Basketball Matchup Predictor",
-            font = ("Times New Roman", 14, "bold")
-        )
-        title_label.pack(pady = 15)
+            text="College Basketball Matchup Predictor",
+            font=("Times New Roman", 16, "bold")
+        ).pack(pady=15)
 
+        # Info about team count
+        ttk.Label(
+            self,
+            text=f"Teams loaded: {len(self.teams)}",
+            font=("Arial", 9)
+        ).pack(pady=(0, 10))
 
-        # Dropdown area
-        form_frame = ttk.Frame(self)
-        form_frame.pack(pady = 15)
+        # Main frame for selectors
+        main_frame = ttk.Frame(self)
+        main_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
+        # Two side-by-side selectors
+        self.selector_a = TeamSelector(main_frame, self.teams, title="Team A")
+        self.selector_a.pack(side="left", fill="both", expand=True, padx=(0, 5))
 
-
-        # First team dropdown
-        team_a_label = ttk.Label(form_frame, text = "Pick a team:")
-        team_a_label.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = "e")
-
-        self.team_a_var = tk.StringVar()
-        self.team_a_combo = ttk.Combobox(
-            form_frame,
-            textvariable=self.team_a_var,
-            values=TEAMS,
-            state = "readonly",
-            width=30
-        )
-        self.team_a_combo.grid(row=0, column=1, padx=5, pady=5)
-        self.team_a_combo.current(0)
-
-
-
-
-        # Second team dropdown 
-        team_b_label = ttk.Label(form_frame, text="Select the opponent and generate predicted outcome:")
-        team_b_label.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = "e")
-
-        self.team_b_var = tk.StringVar()
-        self.team_b_combo = ttk.Combobox(
-            form_frame,
-            textvariable=self.team_b_var,
-            values=TEAMS,
-            state = "readonly",
-            width = 30
-        )
-        self.team_b_combo.grid(row = 1, column = 1, padx = 5, pady = 5)
-        self.team_b_combo.current(1)
+        self.selector_b = TeamSelector(main_frame, self.teams, title="Team B (Opponent)")
+        self.selector_b.pack(side="left", fill="both", expand=True, padx=(5, 0))
 
         # Predict button
-        predict_button = ttk.Button(
+        ttk.Button(
             self,
-            text = "Predict Game",
-            command = self.on_predict_click
-        )
-        predict_button.pack(pady = 15)
+            text="Predict Game",
+            command=self.on_predict_click
+        ).pack(pady=10)
 
         # Output label
         self.result_label = ttk.Label(
             self,
-            text = "Choose two teams to begin.",
-            font = ("Arial", 10)
+            text="Choose two teams to begin.",
+            font=("Arial", 10),
+            justify="center"
         )
-        self.result_label.pack(pady = 5)
+        self.result_label.pack(pady=5)
 
+
+
+
+    # Prediction Logic (placeholder for now)
     def on_predict_click(self):
-        team_a = self.team_a_var.get()
-        team_b = self.team_b_var.get()
+        team_a = self.selector_a.get_selected_team()
+        team_b = self.selector_b.get_selected_team()
 
-        if team_a == team_b:
-            messagebox.showwarning("Invalid Matchup", "Please select two different teams.")
+        if not team_a or not team_b:
+            messagebox.showwarning("Missing Choice", "Please select both teams.")
             return
 
-        # Random logic for now
+        if team_a == team_b:
+            messagebox.showwarning("Invalid Matchup", "Pick two different schools.")
+            return
+
+        # Simple placeholder prediction for now
         predicted_winner = team_a
         score_a = 75
         score_b = 68
