@@ -16,7 +16,6 @@ from file_loader import load_all_data
 
 
 #  Tunable constants. These constants are not in the data, but are used in KENPOM College Basketball offical ratings.
-
 COEF_OFFENSE   = 0.18   # ADJOE_team - ADJOE_opp
 COEF_DEFENSE   = 0.14   # ADJDE_opp - ADJDE_team
 COEF_BARTHAG   = 22.0   # BARTHAG_team - BARTHAG_opp
@@ -27,3 +26,36 @@ HOME_EDGE      = 3.5    # Home game advantage
 MARGIN_SCALE   = 7.0
 
 
+
+
+
+class MatchupPredictor:
+
+    def __init__(self):
+        results_df, ratings_df, adv_df = load_all_data()  # load_all_data() gives us the 3 data sets
+
+        # store copies of the 3 dataframes inside the class
+        self.results_df = results_df.copy()
+        self.ratings_df = ratings_df.copy()
+        self.adv_df = adv_df.copy()
+
+        # clean  all 3 datasets
+        self._prepare_results()
+        self._prepare_advanced()
+        self._prepare_ratings()
+
+        # compute the average total points per game
+        self.league_avg_total_points = float(self.results_df["total_points"].mean())
+
+        # compute the average tempo for the whole league, if the dataset has ADJ_T, we use it
+        if "ADJ_T" in self.adv_df.columns:
+            self.league_avg_tempo = float(self.adv_df["ADJ_T"].mean())
+        else:
+            # if for some reason ADJ_T is missing,
+            # just assume a normal D1 tempo of about 67 possessions. This is found one KENPOM College basketball Ratings
+            self.league_avg_tempo = 67.0
+
+
+
+
+    
