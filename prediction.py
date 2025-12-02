@@ -55,7 +55,34 @@ class MatchupPredictor:
             # just assume a normal D1 tempo of about 67 possessions. This is found one KENPOM College basketball Ratings
             self.league_avg_tempo = 67.0
 
+    # Data prep
+    def _prepare_results(self) -> None:
+
+        # Work with the dataframe that has actual game results
+        df = self.results_df
+
+        # Make sure the team score column is numeric
+        # turns bad values into NaN instead of crashing.
+        df["teamscore"] = pd.to_numeric(df.get("teamscore"), errors = "coerce")
 
 
+        # Same thing for the opponent score.
+        df["oppscore"] = pd.to_numeric(df.get("oppscore"), errors = "coerce")
+
+
+        # Total points scored in the game 
+        # team + opponent
+        df["total_points"] = df["teamscore"] + df["oppscore"]
+
+
+        # Margin = points_for_team - points_for_opponent
+        # Positive margin means the primary team won
+        df["margin"] = df["teamscore"] - df["oppscore"]
+
+        self.results_df = df
+
+        
+
+    
 
     
