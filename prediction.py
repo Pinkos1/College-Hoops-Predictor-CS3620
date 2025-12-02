@@ -118,6 +118,78 @@ class MatchupPredictor:
         self.ratings_df = df
 
 
+
+    # 
+    # Look up
+    def _get_adv_features(self, team_name: str) -> Dict[str, float]:
+    
+        
+        # Check if the team exists in the adv_index (created earlier in _prepare_advanced
+        if team_name in self.adv_index.index:
+
+            # Grab that entire row of stats
+            row = self.adv_index.loc[team_name]
+
+
+            # Get offensive efficiency (ADJOE)
+            adjoe   = float(row.get("ADJOE", 110.0))
+
+            # Get defensive efficiency (ADJDE)
+            adjde   = float(row.get("ADJDE", 100.0))
+
+            # BARTHAG = overall power rating (0.00 – 1.00)
+            barthag = float(row.get("BARTHAG", 0.50))
+
+            # Tempo (ADJ_T) = estimated possessions per game
+            tempo   = float(row.get("ADJ_T", self.league_avg_tempo))
+
+
+
+        # Rankings
+        #   "rk" is the primary column in the file,
+        #   "RK" appears in some versions of cbb25 datasets
+            if not pd.isna(row.get("rk", float("nan"))):
+                rank = float(row["rk"])
+            elif not pd.isna(row.get("RK", float("nan"))):
+                rank = float(row["RK"])
+            else:
+                rank = 180.0  #### Kinda AVERAGE
+
+
+
+            # SEED (NCAA March Madness tournament projection)
+            seed    = float(row.get("SEED", 16.0))
+
+        # If the team name wasn't found at all in the advanced stats,
+        # we give them generic average D1 numbers so the model doesn’t break.
+
+
+        #### JUST INCASE
+        else:
+            adjoe = 110.0
+            adjde = 100.0
+            barthag = 0.50
+            tempo = self.league_avg_tempo
+            rank = 180.0
+            seed = 16.0
+
+        return {
+            "ADJOE": adjoe,
+            "ADJDE": adjde,
+            "BARTHAG": barthag,
+            "ADJ_T": tempo,
+            "RANK": rank,
+            "SEED": seed,
+        }
+
+    def _get_team_total_points_avg(self, team_name: str) -> float:
+        df = self.results_df
+        mask = (df["team"] == team_name) | (df["opponent"] == team_name)
+        subset = df[mask]
+        if subset.empty:
+            return float("nan")
+        return float(subset["total_points"].mean())
+
     
 
     
