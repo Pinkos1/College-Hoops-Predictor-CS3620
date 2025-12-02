@@ -5,18 +5,15 @@
 @Brief - Logic for loading team data for the College Hoops predictor GUI.
 """
 
+import os
 import pandas as pd
 
-# Path to your cbb25.csv file
-CBB25_PATH = "C:/Users/a13pi/Downloads/cbb25.csv"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CBB25_PATH = os.path.join(BASE_DIR, "cbb25.csv")
 
 
 def load_team_list():
-    """
-    Load and return a sorted list of team names from cbb25.csv.
-
-    Tries several common column names to find the team column.
-    """
     df = pd.read_csv(CBB25_PATH)
 
     # Try to determine team column automatically
