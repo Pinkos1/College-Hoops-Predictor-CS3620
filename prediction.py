@@ -160,10 +160,9 @@ class MatchupPredictor:
             # SEED (NCAA March Madness tournament projection)
             seed    = float(row.get("SEED", 16.0))
 
+
         # If the team name wasn't found at all in the advanced stats,
-        # we give them generic average D1 numbers so the model doesn’t break.
-
-
+        # we give them generic average D1 numbers so the model doesn’t break
         #### JUST INCASE
         else:
             adjoe = 110.0
@@ -173,6 +172,8 @@ class MatchupPredictor:
             rank = 180.0
             seed = 16.0
 
+
+        # Return everything in a dictionary to the caller
         return {
             "ADJOE": adjoe,
             "ADJDE": adjde,
@@ -181,13 +182,24 @@ class MatchupPredictor:
             "RANK": rank,
             "SEED": seed,
         }
+    
 
     def _get_team_total_points_avg(self, team_name: str) -> float:
+
         df = self.results_df
+
+        # Make a mask (filter) for all games where this team played
+        # Either as "team" or "opponent"
         mask = (df["team"] == team_name) | (df["opponent"] == team_name)
+
+        # Pull only those games
         subset = df[mask]
+
+        # If the team has no recorded games, return NaN so the caller knows it's missing
         if subset.empty:
             return float("nan")
+        
+        # Compute and return the average total points in those gameess
         return float(subset["total_points"].mean())
 
     
