@@ -106,5 +106,18 @@ class MatchupPredictor:
 
 
     
+    def _prepare_ratings(self) -> None:
+        # Work with the dataframe that holds team-vs-team ratings which is caa_wp_matrix_2025.csv
+        df = self.ratings_df
+
+    # Both columns contain  numeric values
+    # We convert them to actual numeric types so math works correctly
+        for col in ["rating_team", "rating_opponent"]:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors = "coerce")  # if the value is bad or missing, turn it into NaN
+        self.ratings_df = df
+
+
+    
 
     
