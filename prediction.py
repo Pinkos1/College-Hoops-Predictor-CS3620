@@ -81,7 +81,29 @@ class MatchupPredictor:
 
         self.results_df = df
 
-        
+
+
+
+    def _prepare_advanced(self) -> None:
+        # Work with the cbb25 that has all the advanced team stats
+        df = self.adv_df
+
+        # These columns all contain numeric values in cbb25.csv
+        # loop through each one and convert it to a real number type.
+        for col in ["ADJOE", "ADJDE", "BARTHAG", "ADJ_T", "SEED", "rk", "RK"]:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce")  # If the value is missing or invalid, errors = coerce will turn it into NaN
+                # instead of causing the code to crash
+
+
+        # The model needs to quickly look up stats for a team by name
+        if "Team" in df.columns:
+            self.adv_index = df.set_index("Team")  # turn the "Team" column into the index
+        else:
+            self.adv_index = pd.DataFrame()
+
+        self.adv_df = df
+
 
     
 
