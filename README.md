@@ -114,6 +114,7 @@ A second GUI tab explains every stat:
 -rating_opponent
 
 # SQL Database Schema
+
 The SQL schema lives in /sql/ (recommendation):
 
 -Core Tables
