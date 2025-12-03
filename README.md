@@ -1,10 +1,12 @@
-One Shining Query — College Hoops Predictor
-NCAA Division I Basketball Simulation & Prediction Engine
-
 Author: Adam Pinkos
 Date: November 18th, 2025
 Course: CS3620 — Advanced Database Systems
+
+One Shining Query — College Hoops Predictor
+NCAA Division I Basketball Simulation & Prediction Engine 
+
 ## Overview ##
+
 
 College Hoops Predictor is a full-stack NCAA Division I basketball analytics system that allows users to:
 
