@@ -52,17 +52,17 @@ def build_breakdown_text(pred):
 
     lines = []
 
-    # ------------------------------------------------------------------
+
+
     # Offense / defense / BARTHAG / rank / rating by team
-    # ------------------------------------------------------------------
     lines.append("=== team_ratings ===")
     lines.append(f"{team1:>15}  off_ADJOE = {t1_off:6.2f}   def_ADJDE = {t1_def:6.2f}   BARTHAG = {t1_barth:6.3f}   rank = {t1_rank:6.1f}   tempo = {t1_temp:6.2f}")
     lines.append(f"{team2:>15}  off_ADJOE = {t2_off:6.2f}   def_ADJDE = {t2_def:6.2f}   BARTHAG = {t2_barth:6.3f}   rank = {t2_rank:6.1f}   tempo = {t2_temp:6.2f}")
     lines.append("")
 
-    # ------------------------------------------------------------------
+
+
     # Diffs from the model's perspective (Team1 - Team2)
-    # ------------------------------------------------------------------
     lines.append("=== feature_differences (Team1 - Team2) ===")
     lines.append(f"offense_diff      = {offense_diff:+7.2f}")
     lines.append(f"defense_diff      = {defense_diff:+7.2f}")
@@ -71,9 +71,8 @@ def build_breakdown_text(pred):
     lines.append(f"rating_diff       = {rating_diff:+7.3f}")
     lines.append("")
 
-    # ------------------------------------------------------------------
+
     # How many points each feature adds to spread
-    # ------------------------------------------------------------------
     lines.append("=== margin_components (points, + favors Team1) ===")
     lines.append(f"margin_off_def    = {margin_off_def:+7.2f}")
     lines.append(f"margin_barth      = {margin_barth:+7.2f}")
@@ -82,9 +81,8 @@ def build_breakdown_text(pred):
     lines.append(f"location_edge     = {location_edge:+7.2f}")
     lines.append("")
 
-    # ------------------------------------------------------------------
+
     # Final margin and scoring environment
-    # ------------------------------------------------------------------
     lines.append("=== final_numbers ===")
     lines.append(f"raw_margin        = {raw_margin:+7.2f}")
     lines.append(f"final_margin_cap  = {final_margin_cap:+7.2f}")
