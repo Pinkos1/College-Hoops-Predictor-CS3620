@@ -114,37 +114,37 @@ A second GUI tab explains every stat:
 -rating_opponent
 
 # SQL Database Schema
--Core Tables
--seasons
--teams
--conferences
--team_season_advanced_stats
--game_results
--rating_matrix
--Prediction System Tables
--model_versions
--model_features
--training_samples
--precomputed_matchup_projections
--prediction_feature_values
--matchup_predictions
--User & Favorite Tables
--users
--favorite_teams
--audit_log
--Analytics Tables
--team_scoring_summaries
--team_location_splits
--matchup_history_summary
--schedule_strength
--team_recent_form
--The schema is structured to support:
--model training
--model versioning
--fast lookup projections
--historical analysis
--user-stored predictions
--All tables include foreign keys and cascading behavior.
+- Core Tables
+- seasons
+- teams
+- conferences
+- team_season_advanced_stats
+- game_results
+- rating_matrix
+- Prediction System Tables
+- model_versions
+- model_features
+- training_samples
+- precomputed_matchup_projections
+- prediction_feature_values
+- matchup_predictions
+- User & Favorite Tables
+- users
+- favorite_teams
+- audit_log
+- Analytics Tables
+- team_scoring_summaries
+- team_location_splits
+- matchup_history_summary
+- schedule_strength
+- team_recent_form
+- The schema is structured to support:
+- model training
+- model versioning
+- fast lookup projections
+- historical analysis
+- user-stored predictions
+- All tables include foreign keys and cascading behavior.
 
 # How to Run the Predictor
 1. Install dependencies
