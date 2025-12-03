@@ -16,22 +16,16 @@ View an in-depth numeric breakdown of why the model produced that score
 View an embedded stat glossary explaining every metric
 
 This project integrates:
-
-A Tkinter GUI interface for matchup selection
-
-A custom Python prediction engine
-
-Fully structured SQL schema for teams, matchups, ratings, advanced stats, and model outputs
+- A Tkinter GUI interface for matchup selection
+- A custom Python prediction engine
+- Fully structured SQL schema for teams, matchups, ratings, advanced stats, and model outputs
 
 Three real NCAA datasets:
+ - cbb25.csv (advanced efficiency metrics)
+ - 2025_cbb_results.csv (game results + scores)
+ - ncaa_wp_matrix_2025.csv (team-vs-team win probability matrix)
 
-cbb25.csv (advanced efficiency metrics)
-
-2025_cbb_results.csv (game results + scores)
-
-ncaa_wp_matrix_2025.csv (team-vs-team win probability matrix)
-
-The system simulates simplified versions of real basketball analytics models (KenPom-style efficiencies, tempo adjustments, power ratings, logistic win probabilities, etc.), while remaining interpretable for end users.
+ The system simulates simplified versions of real basketball analytics models (KenPom-style efficiencies, tempo adjustments, power ratings, logistic win probabilities, etc.), while remaining interpretable for end users.
 
 # How the Prediction Model Works
 
