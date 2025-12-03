@@ -23,6 +23,7 @@ COEF_RANK      = 0.25   # opp_rank - team_rank
 COEF_RATING    = 55.0   # rating_team - rating_opp
 
 HOME_EDGE      = 3.5    # Home game advantage
+MAX_MARGIN     = 30.0
 MARGIN_SCALE   = 7.0
 
 
@@ -337,8 +338,10 @@ class MatchupPredictor:
             + loc_edge
         )
 
+        final_margin_float = max(-MAX_MARGIN, min(MAX_MARGIN, raw_margin))
 
-        # 3) Estimate total points for the game (scoring environment)
+
+        # Estimate total points for the game (scoring environment)
 
 
         # Average total points (team + opponent) in games played by Team 1
@@ -388,7 +391,20 @@ class MatchupPredictor:
         # Slower teams = lower total.
         tempo_total = baseline_total * tempo_factor
 
-
-        
         final_total_float = max(120.0, min(180.0, tempo_total))
 
+       
+       
+       # Convert margin + total into actual predicted scores
+
+  
+    # From these two values, solve for the individual team scores
+        team_score_f = (final_total_float + final_margin_float) / 2.0
+        opp_score_f  = (final_total_float - final_margin_float) / 2.0
+
+
+        # scores
+        team_score = int(round(max(40.0, min(115.0, team_score_f))))
+        opp_score  = int(round(max(40.0, min(115.0, opp_score_f))))
+
+        final_margin_rounded = team_score - opp_score
