@@ -5,15 +5,15 @@ Author: Adam Pinkos
 Course: CS3620 — Advanced Database Systems
 Date: Spring 2025
 
-## Overview
+## Overview ##
 
 College Hoops Predictor is a full-stack NCAA Division I basketball analytics system that allows users to:
 
-# Select any two D1 teams
-# Generate a predicted final score
-# Get a win probability
-# View an in-depth numeric breakdown of why the model produced that score
-# View an embedded stat glossary explaining every metric
+Select any two D1 teams
+Generate a predicted final score
+Get a win probability
+View an in-depth numeric breakdown of why the model produced that score
+View an embedded stat glossary explaining every metric
 
 This project integrates:
 
