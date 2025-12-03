@@ -338,4 +338,42 @@ class MatchupPredictor:
         )
 
 
+        # 3) Estimate total points for the game (scoring environment)
+
+
+        # Average total points (team + opponent) in games played by Team 1
+        team_total_avg = self._get_team_total_points_avg(team_name)
+
+
+        # Same thing for Team 2
+        opp_total_avg = self._get_team_total_points_avg(opponent_name)
+
+
+        # We build a list of for estimating the base total points\
+        total_candidates = [self.league_avg_total_points]
+
+
+        # If Team 1 has real scoring data, include its average game total
+        if not math.isnan(team_total_avg):
+            total_candidates.append(team_total_avg)
+
+
+        # If Team 2 has real scoring data, include its average game total
+        if not math.isnan(opp_total_avg):
+            total_candidates.append(opp_total_avg)
+
+
+        # The baseline expected total is the average of all the available sources
+        baseline_total = sum(total_candidates) / len(total_candidates)
+
+
+        avg_tempo = (t_tempo + o_tempo) / 2.0
+        if self.league_avg_tempo > 0:
+            tempo_factor = avg_tempo / self.league_avg_tempo
+        else:
+            tempo_factor = 1.0
+
+        tempo_total = baseline_total * tempo_factor
+
+        final_total_float = max(120.0, min(180.0, tempo_total))
 
