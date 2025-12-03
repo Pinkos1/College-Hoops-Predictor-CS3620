@@ -147,7 +147,7 @@ The SQL schema lives in /sql/ (recommendation):
 -user-stored predictions
 -All tables include foreign keys and cascading behavior.
 
-File Structure
+## File Structure
 College-Hoops_predictor/
 │
 ├── gui.py                          # Tkinter GUI
@@ -168,16 +168,18 @@ College-Hoops_predictor/
 
 # How to Run the Predictor
 1. Install dependencies
+
 pip install pandas
+
 Tkinter comes preinstalled on most Python distributions.
 
-2. Place CSVs in project folder
+3. Place CSVs in project folder
 Make sure the files are named exactly:
 cbb25.csv
 2025_cbb_results.csv
 ncaa_wp_matrix_2025.csv
 
-3. Run the GUI
+4. Run the GUI
 python gui.py
 
 Example Prediction Output
