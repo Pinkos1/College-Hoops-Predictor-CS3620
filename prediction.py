@@ -398,7 +398,7 @@ class MatchupPredictor:
        # Convert margin + total into actual predicted scores
 
   
-    # From these two values, solve for the individual team scores
+        # From these two values, solve for the individual team scores
         team_score_f = (final_total_float + final_margin_float) / 2.0
         opp_score_f  = (final_total_float - final_margin_float) / 2.0
 
@@ -408,3 +408,70 @@ class MatchupPredictor:
         opp_score  = int(round(max(40.0, min(115.0, opp_score_f))))
 
         final_margin_rounded = team_score - opp_score
+
+        # Win probability from margin 
+        win_prob = 1.0 / (1.0 + math.exp(-final_margin_float / MARGIN_SCALE))
+        win_prob = max(0.0, min(1.0, win_prob))
+
+
+
+
+# 6) Build the "parts" dictionary that holds every internal value
+#
+# The GUI uses this for the breakdown tab
+        parts = {
+    # These are the original inputs pulled straight from cbb25.csv
+
+        "team1_ADJOE": t_off,        # Team 1 offensive efficiency
+        "team1_ADJDE": t_def,        # Team 1 defensive efficiency
+        "team1_BARTHAG": t_barth,    # Team 1 power rating
+        "team1_RANK": t_rank,        # Team 1 ranking (lower = better)
+        "team1_TEMPO": t_tempo,      # Team 1 tempo / pace estimate
+
+        "team2_ADJOE": o_off,        # Team 2 offensive efficiency
+        "team2_ADJDE": o_def,        # Team 2 defensive efficiency
+        "team2_BARTHAG": o_barth,    # Team 2 power rating
+        "team2_RANK": o_rank,        # Team 2 ranking
+        "team2_TEMPO": o_tempo,      # Team 2 tempo
+
+
+        # stat differences
+        "offense_diff": offense_diff,        # ADJOE_team1  - ADJOE_team2
+        "defense_diff": defense_diff,        # (ADJDE_team2 - ADJDE_team1)
+        "barthag_diff": barthag_diff,        # power rating difference
+        "rank_diff": rank_diff,              # ranking difference
+        "rating_diff": rating_diff,          # matchup rating difference
+
+        # point contributions to spread 
+        "margin_off_def": margin_off_def,    # points from offense + defense
+        "margin_barth": margin_barth,        # points from BARTHAG
+        "margin_rank": margin_rank,          # points from ranking
+        "margin_rating": margin_rating,      # points from wp_matrix rating
+        "location_edge": loc_edge,           # home/away/neutral advantage
+
+        # final scoring info 
+        "raw_margin": raw_margin,                        # total predicted margin before capping
+        "final_margin_clamped": final_margin_float,      # clamp to ±30
+        "baseline_total_points": baseline_total,         # original scoring environment
+        "tempo_adjusted_total": tempo_total,             # adjusted by pace
+        "final_total_points": final_total_float,         # clamped final expected total
+}
+
+# ------------------------------------------------------------
+# Return final prediction structure
+        return {
+        "team": team_name,                 # Team 1 name
+        "opponent": opponent_name,         # Team 2 name
+        "location": location,              # 'H', 'V', or 'N'
+        "team_score": team_score,          # Final Team 1 score
+        "opponent_score": opp_score,       # Final Team 2 score
+        "margin": final_margin_rounded,    # Score difference (Team1 - Team2)
+        "win_prob": win_prob,              # Win probability for Team 1
+        "parts": parts,                    # Full breakdown dict (used in the GUI)
+}   
+
+if __name__ == "__main__":
+    predictor = MatchupPredictor()
+
+
+
