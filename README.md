@@ -115,6 +115,7 @@ A second GUI tab explains every stat:
 
 # SQL Database Schema
 The SQL schema lives in /sql/ (recommendation):
+
 -Core Tables
 -seasons
 -teams
@@ -146,25 +147,6 @@ The SQL schema lives in /sql/ (recommendation):
 -historical analysis
 -user-stored predictions
 -All tables include foreign keys and cascading behavior.
-
-## File Structure
-College-Hoops_predictor/
-│
-├── gui.py                          # Tkinter GUI
-├── prediction.py                   # Full scoring + margin prediction engine
-├── prediction_explainer.py         # Formats numeric breakdown for GUI
-├── team_logic.py                   # Loads team list from cbb25.csv
-├── file_loader.py                  # Loads all datasets from local directory
-│
-├── cbb25.csv                       # advanced stats (uploaded)
-├── 2025_cbb_results.csv            # game results (uploaded)
-├── ncaa_wp_matrix_2025.csv         # rating matrix (uploaded)
-│
-└── sql/                            # (recommended) all SQL schema files
-    ├── schema_full.sql
-    ├── schema_prediction.sql
-    ├── schema_analytics.sql
-    └── data_load_scripts.sql
 
 # How to Run the Predictor
 1. Install dependencies
