@@ -243,8 +243,83 @@ class MatchupPredictor:
     # Location
     def _location_edge_points(self, location: str) -> float:
         loc = (location or "").upper()
+
         if loc == "H":
             return HOME_EDGE
         elif loc == "V":
             return -HOME_EDGE
+        
         return 0.0
+    
+
+    # Main prediction
+    def predict_matchup(
+        self, team_name: str, opponent_name: str, location: str = "N"
+    ) -> Dict[str, Any]:
+        """
+        Predict Team 1 (team_name) vs Team 2 (opponent_name).
+        All margins are from Team 1's point of view (positive = Team 1 favored).
+        """
+
+
+        # Pull advanced stats (raw numbers) for both teams
+        # These come from cbb25.csv and include ADJOE, ADJDE, BARTHAG, tempo, etc.
+        t_adv = self._get_adv_features(team_name)
+        o_adv = self._get_adv_features(opponent_name)
+
+
+
+        # Store Team 1  advanced stats
+        t_off   = t_adv["ADJOE"]      # offensive efficiency per 100 possessions
+        t_def   = t_adv["ADJDE"]      # defensive efficiency (lower = better)
+        t_barth = t_adv["BARTHAG"]    # overall power rating
+        t_tempo = t_adv["ADJ_T"]      # tempo / pace estimate
+        t_rank  = t_adv["RANK"]       # ranking number (lower = better)
+
+
+        # Store Team 2 advanced stats
+        o_off   = o_adv["ADJOE"]
+        o_def   = o_adv["ADJDE"]
+        o_barth = o_adv["BARTHAG"]
+        o_tempo = o_adv["ADJ_T"]
+        o_rank  = o_adv["RANK"]
+
+
+
+
+         
+    # Compute differences that drive the point spread
+
+    # Offense diff positive means Team 1 has a stronger offense
+        offense_diff = t_off - o_off    
+        
+        # Defense diff ADJDE = points allowed per 100 poss.
+        # Lower ADJDE = better defense.       
+        defense_diff = o_def - t_def     
+        
+        # BARTHAG diff: positive means Team 1 has a stronger power rating
+        barthag_diff = t_barth - o_barth          
+
+        # Rank diff lower rank = better team.
+        rank_diff    = o_rank - t_rank            
+
+        # Rating diff from ncaa_wp_matrix_2025.csv
+        # Positive means Team 1 is rated higher.
+        rating_diff  = self._get_rating_diff(team_name, opponent_name)  
+
+        
+
+        margin_off_def = COEF_OFFENSE * offense_diff + COEF_DEFENSE * defense_diff
+        margin_barth   = COEF_BARTHAG * barthag_diff
+        margin_rank    = COEF_RANK * rank_diff
+        margin_rating  = COEF_RATING * rating_diff
+
+        loc_edge = self._location_edge_points(location)
+
+        raw_margin = (
+            margin_off_def
+            + margin_barth
+            + margin_rank
+            + margin_rating
+            + loc_edge
+        )
