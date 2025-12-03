@@ -367,13 +367,28 @@ class MatchupPredictor:
         baseline_total = sum(total_candidates) / len(total_candidates)
 
 
-        avg_tempo = (t_tempo + o_tempo) / 2.0
+
+
+        # Tempo adjustment
+        
+        #  ADJ_T is each team's tempo estimated possessions per game
+        avg_tempo = (t_tempo + o_tempo) / 2.0     # avg_tempo = average pace of both teams
+
+        # If the league_avg_tempo is valid, scale the total points
         if self.league_avg_tempo > 0:
-            tempo_factor = avg_tempo / self.league_avg_tempo
+            tempo_factor = avg_tempo / self.league_avg_tempo # based on how fast/slow these teams play compared to the league
+
+        # If something went wrong, don't adjust tempo.
         else:
             tempo_factor = 1.0
 
+
+        # tempo_total = baseline total points adjusted for pace
+        # Faster teams =- higher total.
+        # Slower teams = lower total.
         tempo_total = baseline_total * tempo_factor
 
+
+        
         final_total_float = max(120.0, min(180.0, tempo_total))
 
