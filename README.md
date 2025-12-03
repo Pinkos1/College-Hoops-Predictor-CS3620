@@ -27,231 +27,127 @@ Three real NCAA datasets:
 
  The system simulates simplified versions of real basketball analytics models (KenPom-style efficiencies, tempo adjustments, power ratings, logistic win probabilities, etc.), while remaining interpretable for end users.
 
-# How the Prediction Model Works
+## How the Prediction Model Works
 
 The core prediction logic lives in prediction.py.
 The model computes a predicted margin (Team1 − Team2) using:
 
 1. Offensive / Defensive Efficiency
-
 From cbb25.csv:
-
-ADJOE — Adjusted offensive efficiency
-
-ADJDE — Adjusted defensive efficiency
+- ADJOE — Adjusted offensive efficiency
+- ADJDE — Adjusted defensive efficiency
 
 2. Team Strength Metrics
-
 BARTHAG — Power rating
-
 rk / RK — Rank (lower = better)
-
 Tempo (ADJ_T)
 
 3. Rating Matrix Comparison
-
 From ncaa_wp_matrix_2025.csv:
+- rating_team – rating_opponent
+- Reversed rows are handled automatically.
 
-rating_team – rating_opponent
-
-Reversed rows are handled automatically.
-
-4. Home / Away Adjustment
-
-H = +3.5
-
-V = −3.5
-
-N = 0
-
-5. Total Points Prediction
-
+4. Total Points Prediction
 Uses:
+-Team scoring averages
+-League average scoring
+-Pace (tempo) adjustment
+-Clamping to realistic D1 scores (120–180)
 
-Team scoring averages
-
-League average scoring
-
-Pace (tempo) adjustment
-
-Clamping to realistic D1 scores (120–180)
-
-6. Score Solver
-
+5. Score Solver
 Using two equations:
+-team_score + opp_score = total
+-team_score - opp_score = margin
 
-team_score + opp_score = total
-team_score - opp_score = margin
-
-
-Produce final predicted scores, clamped to 40–115.
-
-7. Win Probability
-
-A logistic curve converts final margin → win chance.
-
+6. Win Probability
+A logistic curve converts final margin = win chance.
 GUI Features (gui.py)
-
 The GUI is built using Tkinter and provides:
 
 # Team Search
-
 Searchable listboxes for Team 1 and Team 2.
-
 # Score Prediction
-
 Shows:
-
-Final predicted score
-
-Win probability
+-Final predicted score
+-Win probability
 
 # Scrollable Breakdown Panel
-
 Displays numeric explanations:
-
-Offense/Defense differences
-
-BARTHAG, ranking, rating diffs
-
-Point contributions to the spread
-
-Tempo-adjusted total scoring calculations
+-Offense/Defense differences
+-BARTHAG, ranking, rating diffs
+-Point contributions to the spread
+-Tempo-adjusted total scoring calculations
 
 # Stat Glossary Tab
-
 A second GUI tab explains every stat:
-
-ADJOE / ADJDE
-
-BARTHAG
-
-Tempo (ADJ_T)
-
-Rank interpretation
-
-Rating matrix meaning
-
-Margin components
-
-Beginner-friendly explanations included.
+-ADJOE / ADJDE
+-BARTHAG
+-Tempo (ADJ_T)
+-Rank interpretation
+-Rating matrix meaning
+-Margin components
+-Beginner-friendly explanations included.
 
  Datasets Used
-1. cbb25.csv
+1. cbb25.csv includes:
+-ADJOE
+-ADJDE
+-BARTHAG
+-ADJ_T
+-SEED
+-rk / RK
+-Team name
 
-From the original project, includes:
+2. 2025_cbb_results.csv includes:
+-team
+-opponent
+-teamscore
+-oppscore
+-location (H/V/N)
+-total_points (generated)
+-margin (generated)
 
-ADJOE
-
-ADJDE
-
-BARTHAG
-
-ADJ_T
-
-SEED
-
-rk / RK
-
-Team name
-
-2. 2025_cbb_results.csv
-
-Includes:
-
-team
-
-opponent
-
-teamscore
-
-oppscore
-
-location (H/V/N)
-
-total_points (generated)
-
-margin (generated)
-
-3. ncaa_wp_matrix_2025.csv
-
-Contains predicted ratings for matchup pairs:
-
-team
-
-opponent
-
-rating_team
-
-rating_opponent
+3. ncaa_wp_matrix_2025.csv contains predicted ratings for matchup pairs:
+-team
+-opponent
+-rating_team
+-rating_opponent
 
 # SQL Database Schema
-
 The SQL schema lives in /sql/ (recommendation):
+-Core Tables
+-seasons
+-teams
+-conferences
+-team_season_advanced_stats
+-game_results
+-rating_matrix
+-Prediction System Tables
+-model_versions
+-model_features
+-training_samples
+-precomputed_matchup_projections
+-prediction_feature_values
+-matchup_predictions
+-User & Favorite Tables
+-users
+-favorite_teams
+-audit_log
+-Analytics Tables
+-team_scoring_summaries
+-team_location_splits
+-matchup_history_summary
+-schedule_strength
+-team_recent_form
+-The schema is structured to support:
+-model training
+-model versioning
+-fast lookup projections
+-historical analysis
+-user-stored predictions
+-All tables include foreign keys and cascading behavior.
 
-Core Tables
-
-seasons
-
-teams
-
-conferences
-
-team_season_advanced_stats
-
-game_results
-
-rating_matrix
-
-Prediction System Tables
-
-model_versions
-
-model_features
-
-training_samples
-
-precomputed_matchup_projections
-
-prediction_feature_values
-
-matchup_predictions
-
-User & Favorite Tables
-
-users
-
-favorite_teams
-
-audit_log
-
-Analytics Tables
-
-team_scoring_summaries
-
-team_location_splits
-
-matchup_history_summary
-
-schedule_strength
-
-team_recent_form
-
-The schema is structured to support:
-
-model training
-
-model versioning
-
-fast lookup projections
-
-historical analysis
-
-user-stored predictions
-
-All tables include foreign keys and cascading behavior.
-
-🧩 File Structure
+File Structure
 College-Hoops_predictor/
 │
 ├── gui.py                          # Tkinter GUI
@@ -273,18 +169,12 @@ College-Hoops_predictor/
 # How to Run the Predictor
 1. Install dependencies
 pip install pandas
-
-
 Tkinter comes preinstalled on most Python distributions.
 
 2. Place CSVs in project folder
-
 Make sure the files are named exactly:
-
 cbb25.csv
-
 2025_cbb_results.csv
-
 ncaa_wp_matrix_2025.csv
 
 3. Run the GUI
@@ -293,7 +183,7 @@ python gui.py
 Example Prediction Output
 Input
 
-Team1: Ohio State
+Team1: Ohio University
 Team2: Maine
 Location: Neutral
 
