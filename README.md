@@ -1,10 +1,9 @@
-2024-2025 College Hoops Predictor
-NCAA Division I Basketball Matchup Score Prediction System
+One Shining Query — College Hoops Predictor
+NCAA Division I Basketball Simulation & Prediction Engine
 
 Author: Adam Pinkos
+Date: November 18th, 2025
 Course: CS3620 — Advanced Database Systems
-Date: Spring 2025
-
 ## Overview ##
 
 College Hoops Predictor is a full-stack NCAA Division I basketball analytics system that allows users to:
