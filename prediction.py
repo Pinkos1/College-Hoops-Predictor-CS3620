@@ -240,5 +240,11 @@ class MatchupPredictor:
         return 0.0
 
     
-
-    
+    # Location
+    def _location_edge_points(self, location: str) -> float:
+        loc = (location or "").upper()
+        if loc == "H":
+            return HOME_EDGE
+        elif loc == "V":
+            return -HOME_EDGE
+        return 0.0
