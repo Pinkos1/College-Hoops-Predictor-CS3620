@@ -307,15 +307,28 @@ class MatchupPredictor:
         # Positive means Team 1 is rated higher.
         rating_diff  = self._get_rating_diff(team_name, opponent_name)  
 
-        
 
+
+        # Convert each stat difference into points added to the spread.
+        # These COEF values were tuned earlier.
+
+        # Points coming from offense + defense differences
         margin_off_def = COEF_OFFENSE * offense_diff + COEF_DEFENSE * defense_diff
+
+        # Points from BARTHAG difference
         margin_barth   = COEF_BARTHAG * barthag_diff
+
+        # Points from ranking difference
         margin_rank    = COEF_RANK * rank_diff
+
+        # Points from rating difference (rating_team - rating_opponent)
         margin_rating  = COEF_RATING * rating_diff
 
+        # Home-court edge +3.5 for home, -3.5 for away, 0 for neutral
         loc_edge = self._location_edge_points(location)
 
+
+        # Combine everything into one “raw” predicted margin
         raw_margin = (
             margin_off_def
             + margin_barth
@@ -323,3 +336,6 @@ class MatchupPredictor:
             + margin_rating
             + loc_edge
         )
+
+
+
