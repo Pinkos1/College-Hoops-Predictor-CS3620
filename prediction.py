@@ -201,6 +201,43 @@ class MatchupPredictor:
         
         # Compute and return the average total points in those gameess
         return float(subset["total_points"].mean())
+    
+
+
+    def _get_rating_diff(self, team_name: str, opponent_name: str) -> float:
+
+        df = self.ratings_df
+
+        # If the expected numeric columns are missing, we can't compute anything
+        if "rating_team" not in df.columns or "rating_opponent" not in df.columns:
+            return 0.0
+
+
+        # Try to find the matchup exactly as written #   (team_name vs opponent_name)
+        direct = df[(df["team"] == team_name) & (df["opponent"] == opponent_name)]
+
+         # If this row exists in the file
+        if not direct.empty:
+
+            # rating_team is Team 1's rating
+            # rating_opponent is Team 2's rating
+            row = direct.iloc[0]
+            return float(row["rating_team"] - row["rating_opponent"])
+
+
+        # If the row wasn't stored in that order,
+        # make the file has it reversed (opponent vs team)
+        rev = df[(df["team"] == opponent_name) & (df["opponent"] == team_name)]
+        if not rev.empty:
+            row = rev.iloc[0]
+
+
+            # Instead of (rating_team - rating_opponent), do -(that value) to convert it into Team1 - Team2.
+            return float(-(row["rating_team"] - row["rating_opponent"]))
+
+
+        ### JUST INCASE
+        return 0.0
 
     
 
